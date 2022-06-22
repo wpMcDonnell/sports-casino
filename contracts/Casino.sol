@@ -53,8 +53,8 @@ function submitBet(uint8 _teamSelected) public payable {
 //at the end, we increment the stakes of the team selected with the player bet
         prizePool += msg.value;
     }
-    
-// Generates a number between 1 and 10 that will be the winner
+
+// Pay Out for team 0 (A) or 1 (B)
 function payOut(uint16 teamWinner) public onlyOwner {
         if (teamWinner == 0) {
             for(uint256 i = 0; i < playersTeamA.length; i++){
@@ -92,5 +92,4 @@ function openBet() public onlyOwner {
 function closeBet() public onlyOwner {
         betIsOpen = false;
     }
-
 }
