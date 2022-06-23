@@ -3,7 +3,7 @@ import './App.css';
 import React, { Component, Fragment } from "react";
 import Button from 'react-bootstrap/Button';
 import { Card, Modal } from 'react-bootstrap';
-import Casino from "./Casino_Mumbai.json";
+import Casino from "./Casino_Mumbai_2.json";
 import Web3 from 'web3';
 
 class App extends Component {
@@ -55,7 +55,7 @@ connectWallet = async () => {
     // Set up contract Instance
     const instance = new web3.eth.Contract(
       Casino.abi,
-      '0xe9D497765bf62109388aD5b04971cdd9CF77929d',
+      '0xDabF53eE794Bc51D537585e88806159992A20F33',
     );
     // Set web3, accounts, and contract to the state
     this.setState({ web3, accounts, contract: instance, networkError: false, connected: true  });
@@ -146,7 +146,7 @@ connectWallet = async () => {
     console.log(this.state.connected, 'this.state.connected being read')
      await this.state.contract.methods.submitBet(1).send({ from: this.state.accounts[0], value: 100000000000000 })
       .on('transactionHash', (hash) => {
-        this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
+        this.setState({ messageToUser: `Here is your transaction Hash ${hash}`, hash: hash });
         this.setState({ connected: false })
         console.log(hash);
       })
@@ -161,9 +161,9 @@ connectWallet = async () => {
       })
   }
 
-  withdrawl = async () => {
+  withdraw = async () => {
     console.log(this.state.connected, 'this.state.connected being read')
-     await this.state.contract.methods.withdrawl().send({ from: this.state.accounts[0] })
+     await this.state.contract.methods.withdraw().send({ from: this.state.accounts[0] })
       .on('transactionHash', (hash) => {
         this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
         this.setState({ connected: false })
@@ -231,7 +231,7 @@ render () {
     </div>
     <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.openBet(); this.walletTriggerClicked() }}>Open Bet</Button>
     <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.closeBet(); this.walletTriggerClicked() }}>Hault Bets</Button>
-    <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.withdrawl(); this.walletTriggerClicked() }}>Withdrawl</Button>
+    <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.withdraw(); this.walletTriggerClicked() }}>Withdraw</Button>
     <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.payOutTeamA(); this.walletTriggerClicked() }}>PayOut A</Button>
     <Button variant='dark' className='mb-1 mb-3 col-2 mx-auto' onClick={() => { this.payOutTeamB(); this.walletTriggerClicked() }}>PayOut B</Button>
     </Card>
