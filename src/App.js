@@ -83,7 +83,10 @@ connectWallet = async () => {
       .on('transactionHash', (hash) => {
         this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
         console.log(hash);
-
+      })
+      .on('confirmation', function(confirmationNumber, receipt){
+        this.setState({ messageToUser: `Congrats, you stopped the betting ${confirmationNumber}` });
+        this.setState({ connected: false })
       })
       .on('error', (error) => {
         this.setState({ connected: true });
@@ -98,6 +101,7 @@ connectWallet = async () => {
      await this.state.contract.methods.openBet().send({ from: this.state.accounts[0], value: 0 })
       .on('transactionHash', (hash) => {
         this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
+        this.setState({ connected: false })
         console.log(hash);
 
       })
@@ -227,7 +231,7 @@ function ModalForWrongNetwork (props) {
                       
                     </div>
                   </div>
-                  : ''}
+                  : <p>{this.state.messageToUser}</p> }
               </div>
               : 
               <div className='d-flex mx-auto justify-content-center pt-5 mt-5'> Get a Wallet
