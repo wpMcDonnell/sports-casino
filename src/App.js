@@ -97,7 +97,6 @@ connectWallet = async () => {
   }
 
   openBet = async () => {
-    // Successfully calls mint function
     console.log(this.state.connected, 'this.state.connected being read')
      await this.state.contract.methods.openBet().send({ from: this.state.accounts[0] })
       .on('transactionHash', (hash) => {
@@ -108,7 +107,6 @@ connectWallet = async () => {
       })
       .on('confirmation', function(confirmationNumber, receipt){
         this.setState({ messageToUser: `Congrats, you stopped the betting - confirmation # ${confirmationNumber} and ${receipt}` });
-        this.setState({ connected: false })
       })
       .on('error', (error) => {
         this.setState({ connected: true });
@@ -123,7 +121,6 @@ connectWallet = async () => {
   }
 
   placeBetA = async () => {
-    // Successfully calls mint function
     console.log(this.state.connected, 'this.state.connected being read')
      await this.state.contract.methods.submitBet(0).send({ from: this.state.accounts[0], value: 100000000000000 })
       .on('transactionHash', (hash) => {
@@ -131,10 +128,10 @@ connectWallet = async () => {
         this.setState({ connected: false })
         console.log(hash);
       })
-      .on('confirmation', function(confirmationNumber, receipt){
-        this.setState({ messageToUser: `Congrats, you just bet on team A here is your confirmation # ${confirmationNumber} and ${receipt}` });
-        this.setState({ connected: false })
-      })
+      // .on('confirmation', function(confirmationNumber, receipt){
+      //   this.setState({ messageToUser: `Congrats, you just bet on team A here is your confirmation # ${confirmationNumber} and ${receipt}` });
+      //   this.setState({ connected: false })
+      // })
       .on('error', (error) => {
         this.setState({ connected: true });
         this.setState({ messageToUser: 'Whoops! Want to try again?' })
@@ -143,7 +140,6 @@ connectWallet = async () => {
   }
 
   placeBetB = async () => {
-    // Successfully calls mint function
     console.log(this.state.connected, 'this.state.connected being read')
      await this.state.contract.methods.submitBet(1).send({ from: this.state.accounts[0], value: 100000000000000 })
       .on('transactionHash', (hash) => {
@@ -151,10 +147,10 @@ connectWallet = async () => {
         this.setState({ connected: false })
         console.log(hash);
       })
-      .on('confirmation', function(confirmationNumber, receipt){
-        this.setState({ messageToUser: `Congrats, you just bet on team B here is your confirmation # ${confirmationNumber} and ${receipt}` });
-        this.setState({ connected: false })
-      })
+      // .on('confirmation', function(confirmationNumber, receipt){
+      //   this.setState({ messageToUser: `Congrats, you just bet on team B here is your confirmation # ${confirmationNumber} and ${receipt}` });
+      //   this.setState({ connected: false })
+      // })
       .on('error', (error) => {
         this.setState({ connected: true });
         this.setState({ messageToUser: 'Whoops! Want to try again?' })
@@ -163,7 +159,6 @@ connectWallet = async () => {
   }
 
   withdrawl = async () => {
-    // Successfully calls mint function
     console.log(this.state.connected, 'this.state.connected being read')
      await this.state.contract.methods.withdrawl().send({ from: this.state.accounts[0] })
       .on('transactionHash', (hash) => {
@@ -171,10 +166,10 @@ connectWallet = async () => {
         this.setState({ connected: false })
         console.log(hash);
       })
-      .on('confirmation', function(confirmationNumber, receipt){
-        this.setState({ messageToUser: `Congrats, you just withdrew funds from contract, here is your confirmation # ${confirmationNumber} and ${receipt}` });
-        this.setState({ connected: false })
-      })
+      // .on('confirmation', function(confirmationNumber, receipt){
+      //   this.setState({ messageToUser: `Congrats, you just withdrew funds from contract, here is your confirmation # ${confirmationNumber} and ${receipt}` });
+      //   this.setState({ connected: false })
+      // })
       .on('error', (error) => {
         this.setState({ connected: true });
         this.setState({ messageToUser: 'Whoops! Want to try again?' })
@@ -183,7 +178,6 @@ connectWallet = async () => {
   }
 
   payOut = async () => {
-    // Successfully calls mint function
     console.log(this.state.connected, 'this.state.connected being read')
      await this.state.contract.methods.payOut().send({ from: this.state.accounts[0] })
       .on('transactionHash', (hash) => {
@@ -191,10 +185,10 @@ connectWallet = async () => {
         this.setState({ connected: false })
         console.log(hash);
       })
-      .on('confirmation', function(confirmationNumber, receipt){
-        this.setState({ messageToUser: `Congrats, you just paid out the winners and ended the bet, here is your confirmation # ${confirmationNumber} and ${receipt}` });
-        this.setState({ connected: false })
-      })
+      // .on('confirmation', function(confirmationNumber, receipt){
+      //   this.setState({ messageToUser: `Congrats, you just paid out the winners and ended the bet, here is your confirmation # ${confirmationNumber} and ${receipt}` });
+      //   this.setState({ connected: false })
+      // })
       .on('error', (error) => {
         this.setState({ connected: true });
         this.setState({ messageToUser: 'Whoops! Want to try again?' })
@@ -272,9 +266,9 @@ function ModalForWrongNetwork (props) {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
         </header>
-          <div className='d-flex col-3 justify-content-around mb-3 mx-auto'>
+          {/* <div className='d-flex col-3 justify-content-around mb-3 mx-auto'>
               <Button variant='dark' onClick={() => { this.test() }}>test</Button>
-          </div>
+          </div> */}
 
         {window.ethereum ?
               <div className="d-flex container">
@@ -318,10 +312,8 @@ function ModalForWrongNetwork (props) {
                   </div> }
               </div>
               : 
-              <div className='d-flex mx-auto justify-content-center pt-5 mt-5'> Get a Wallet
-              <br/>
-              <br/>
-              <a href="https://metamask.io/">  https://metamask.io/ </a>
+              <div className='d-flex mx-auto justify-content-center pt-5 mt-5'>
+              <a href="https://metamask.io/">  Download MetaMask</a>
               </div> 
               }
 
@@ -329,7 +321,7 @@ function ModalForWrongNetwork (props) {
 
      {/* Footer section*/}
      <div className={this.state.footerClassName}>
-          <div className="container footer"><small>Copyright © Will McDonnell 2021</small></div>
+          <div className="container footer"><small>Copyright © Will McDonnell 2022</small></div>
         </div>
     </Fragment>
   );
