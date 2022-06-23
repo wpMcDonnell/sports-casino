@@ -19,6 +19,7 @@ class App extends Component {
       connected: false,
       messageToUser: '',
       showModal: true,
+      footerClassName: "copyright-fixed py-4 text-center text-white mb-auto"
     };
 
   }
@@ -79,7 +80,7 @@ connectWallet = async () => {
 // close bet function for only owner / deployer
   closeBet = async () => {
     console.log(this.state.connected, 'this.state.connected being read')
-     await this.state.contract.methods.closeBet().send({ from: this.state.accounts[0], value: 0 })
+     await this.state.contract.methods.closeBet().send({ from: this.state.accounts[0] })
       .on('transactionHash', (hash) => {
         this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
         console.log(hash);
@@ -98,12 +99,16 @@ connectWallet = async () => {
   openBet = async () => {
     // Successfully calls mint function
     console.log(this.state.connected, 'this.state.connected being read')
-     await this.state.contract.methods.openBet().send({ from: this.state.accounts[0], value: 0 })
+     await this.state.contract.methods.openBet().send({ from: this.state.accounts[0] })
       .on('transactionHash', (hash) => {
         this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
         this.setState({ connected: false })
         console.log(hash);
 
+      })
+      .on('confirmation', function(confirmationNumber, receipt){
+        this.setState({ messageToUser: `Congrats, you stopped the betting ${confirmationNumber}` });
+        this.setState({ connected: false })
       })
       .on('error', (error) => {
         this.setState({ connected: true });
@@ -115,6 +120,22 @@ connectWallet = async () => {
   walletTriggerClicked = async () => {
     this.setState({ connected: false })
     this.setState({ messageToUser: 'Confirm your transaction in MetaMask' })
+  }
+
+  placeBet = async () => {
+    // Successfully calls mint function
+    console.log(this.state.connected, 'this.state.connected being read')
+     await this.state.contract.methods.submitBet().send({ from: this.state.accounts[0], value: 100000000000000 })
+      .on('transactionHash', (hash) => {
+        this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
+        this.setState({ connected: false })
+        console.log(hash);
+      })
+      .on('error', (error) => {
+        this.setState({ connected: true });
+        this.setState({ messageToUser: 'Whoops! Want to try again?' })
+        console.log('inside error', error);
+      })
   }
 
 
@@ -216,31 +237,39 @@ function ModalForWrongNetwork (props) {
 
                 {this.state.connected ?
                   <div className='container mt-5'>
-                    <div className='d-flex col-3 justify-content-around mb-3 mx-auto'>
-                      <Button variant='dark' onClick={() => { this.mint(); this.mintClicked() }}>Place Bet</Button>
-                      <Button variant='dark' onClick={() => { this.setState({ accounts: null, connected: false, messageToUser: '' }) }}>Reset</Button>
-                    </div>
-                    <div className="justify-content-center col-6 mx-auto accounts-text">
-                      <div className="row accounts-text-with justify-content-center col-6 mx-auto">
+                    <div className="row accounts-text justify-content-center col-6 mx-auto mb-2">
                         With
                       </div>
+                      <div className="row accounts-text justify-content-center col-6 mx-auto">
                       {this.state.accounts}
+                      </div>
+                    <div className='d-flex col-5 mt-3 justify-content-around mb-3 mx-auto'>
+                      <Button variant='dark' onClick={() => { this.placeBetA(); this.walletTriggerClicked() }}>Place Bet Team A</Button>
+                      <Button variant='dark' onClick={() => { this.placeBetB(); this.walletTriggerClicked() }}>Place Bet Team B</Button>
+                    </div>
+                    <Button variant='dark' onClick={() => { this.setState({ accounts: null, connected: false, messageToUser: '' }) }}>Reset</Button>
+                    <div className="justify-content-center col-6 mx-auto accounts-text">
                       <div className="row justify-content-center col-12 mt-4 mx-auto">
                         {ownerJSX}  
                       </div>
-                      
                     </div>
                   </div>
-                  : <p>{this.state.messageToUser}</p> }
+                  : <p className='message-to-user'>{this.state.messageToUser}</p> }
               </div>
               : 
               <div className='d-flex mx-auto justify-content-center pt-5 mt-5'> Get a Wallet
+              <br/>
+              <br/>
               <a href="https://metamask.io/">  https://metamask.io/ </a>
               </div> 
               }
-        
 
       </div>
+
+     {/* Footer section*/}
+     <div className={this.state.footerClassName}>
+          <div className="container footer"><small>Copyright © Will McDonnell 2021</small></div>
+        </div>
     </Fragment>
   );
 }
