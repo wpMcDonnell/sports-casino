@@ -20,7 +20,7 @@ class App extends Component {
       messageToUser: '',
       showModal: true,
     };
-    // this.mint = this.mint.bind(this);
+
   }
 
   componentDidMount = async () => {
@@ -51,10 +51,9 @@ connectWallet = async () => {
     // Use web3 to get the user's accounts.
     const accounts = await web3.eth.getAccounts();
     // Set up contract Instance
-    const deployedNetwork = Casino.networks[networkId];
     const instance = new web3.eth.Contract(
       Casino.abi,
-      deployedNetwork && deployedNetwork.address,
+      '0xDc15D3c022b3277f691571Ca9621596b87d16047',
     );
     // Set web3, accounts, and contract to the state
     this.setState({ web3, accounts, contract: instance, networkError: false, connected: true  });
@@ -74,7 +73,46 @@ connectWallet = async () => {
 
   test = async () => {
     await console.log(this.state.accounts)
+    console.log(this.state.contract)
   }
+
+// close bet function for only owner / deployer
+  closeBet = async () => {
+    console.log(this.state.connected, 'this.state.connected being read')
+     await this.state.contract.methods.closeBet().send({ from: this.state.accounts[0], value: 0 })
+      .on('transactionHash', (hash) => {
+        this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
+        console.log(hash);
+
+      })
+      .on('error', (error) => {
+        this.setState({ connected: true });
+        this.setState({ messageToUser: 'Whoops! Want to try again?' })
+        console.log('inside error', error);
+      })
+  }
+
+  openBet = async () => {
+    // Successfully calls mint function
+    console.log(this.state.connected, 'this.state.connected being read')
+     await this.state.contract.methods.openBet().send({ from: this.state.accounts[0], value: 0 })
+      .on('transactionHash', (hash) => {
+        this.setState({ messageToUser: `Here is your transaction Hash ${hash}` });
+        console.log(hash);
+
+      })
+      .on('error', (error) => {
+        this.setState({ connected: true });
+        this.setState({ messageToUser: 'Whoops! Want to try again?' })
+        console.log('inside error', error);
+      })
+  }
+
+  walletTriggerClicked = async () => {
+    this.setState({ connected: false })
+    this.setState({ messageToUser: 'Confirm your transaction in MetaMask' })
+  }
+
 
 render () {
 
@@ -83,11 +121,17 @@ render () {
   if (this.state.accounts != null) {
     if (this.state.accounts.toString() === '0x83ca0B46a5D5CeD7420285d1252d3348649bF5fC') {
    ownerJSX = (
-    <Card className='shadow mb-2 col-6 mx-auto' id='owner-options-card'>
-    <div className='mt-3 mx-auto'> Owner Seetings
-        
-      </div>
-      <div id='sub-title' className='mx-auto'> Something </div>
+    <Card className='shadow mb-2 mx-auto' style={{ width: '50rem' }} id='owner-options-card'>
+    <div className='mt-3 mx-auto'> 
+      Owner Seetings
+    </div>
+    <div id='sub-title' className='mx-auto'> 
+      Something 
+    </div>
+    <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.openBet(); this.walletTriggerClicked() }}>Open Bet</Button>
+    <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.closeBet(); this.walletTriggerClicked() }}>Hault Bets</Button>
+    <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.mint(); this.mintClicked() }}>Withdrawl</Button>
+    <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.setState({ accounts: null, connected: false, messageToUser: '' }) }}>Pay out</Button>
     
     </Card>
   )}}
@@ -169,15 +213,18 @@ function ModalForWrongNetwork (props) {
                 {this.state.connected ?
                   <div className='container mt-5'>
                     <div className='d-flex col-3 justify-content-around mb-3 mx-auto'>
-                      <Button variant='dark' onClick={() => { this.mint(); this.mintClicked() }}>Mint</Button>
+                      <Button variant='dark' onClick={() => { this.mint(); this.mintClicked() }}>Place Bet</Button>
                       <Button variant='dark' onClick={() => { this.setState({ accounts: null, connected: false, messageToUser: '' }) }}>Reset</Button>
                     </div>
-                    <div className="row justify-content-center col-12 mx-auto accounts-text">
-                      <div className="row accounts-text-with justify-content-center col-12 mx-auto">
-                        With   
+                    <div className="justify-content-center col-6 mx-auto accounts-text">
+                      <div className="row accounts-text-with justify-content-center col-6 mx-auto">
+                        With
                       </div>
                       {this.state.accounts}
-                      {ownerJSX}
+                      <div className="row justify-content-center col-12 mt-4 mx-auto">
+                        {ownerJSX}  
+                      </div>
+                      
                     </div>
                   </div>
                   : ''}

@@ -33,6 +33,15 @@ body {
   color: #61dafb;
 }
 
+.accounts-text {
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: rgb(217, 239, 155);
+}
+
+#owner-options-card {
+  background-color: #282c34;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
