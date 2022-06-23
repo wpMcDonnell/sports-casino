@@ -39,6 +39,7 @@ function submitBet(uint8 _teamSelected) public payable {
       // require value sent for call == bet 
       // require that a person can not bet twice
       require(msg.value == bet);
+      require(betIsOpen);
       require(!checkPlayerTeamA(payable(msg.sender)));
 
 //If player exists in array, do not add wallet address to pool, but if has not bet yet, push wallet address, aka player to address pool
@@ -49,7 +50,7 @@ function submitBet(uint8 _teamSelected) public payable {
       if (!checkPlayerTeamB(payable(msg.sender)) && _teamSelected == 1){
         playersTeamB.push(payable(msg.sender));
       }
-//at the end, we increment the stakes of the team selected with the player bet
+// Add value from msg.sender to prizePool
         prizePool += msg.value;
     }
 
