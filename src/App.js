@@ -204,16 +204,13 @@ render () {
     if (this.state.accounts.toString() === '0x83ca0B46a5D5CeD7420285d1252d3348649bF5fC') {
    ownerJSX = (
     <Card className='shadow mb-2 mx-auto' style={{ width: '50rem' }} id='owner-options-card'>
-    <div className='mt-3 mx-auto'> 
-      Owner Seetings
-    </div>
-    <div id='sub-title' className='mx-auto'> 
-      Something 
+    <div className='mt-3 mb-2 mx-auto'> 
+      Owner Settings
     </div>
     <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.openBet(); this.walletTriggerClicked() }}>Open Bet</Button>
     <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.closeBet(); this.walletTriggerClicked() }}>Hault Bets</Button>
     <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.withdrawl(); this.walletTriggerClicked() }}>Withdrawl</Button>
-    <Button variant='dark' className='mb-1 col-2 mx-auto' onClick={() => { this.payOut(); this.walletTriggerClicked() }}>Pay out</Button>
+    <Button variant='dark' className='mb-1 mb-3 col-2 mx-auto' onClick={() => { this.payOut(); this.walletTriggerClicked() }}>Pay out</Button>
     
     </Card>
   )}}
