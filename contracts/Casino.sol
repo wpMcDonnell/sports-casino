@@ -36,9 +36,8 @@ function checkPlayerTeamB(address payable player) public view returns(bool){
     }
 
 function submitBet(uint8 _teamSelected) public payable {
-      //The first require is used to check if the player already exist
-      //The second one is used to see if the value sended by the player is
-      //Higher than the minimum value
+      // require value sent for call == bet 
+      // require that a person can not bet twice
       require(msg.value == bet);
       require(!checkPlayerTeamA(payable(msg.sender)));
 
